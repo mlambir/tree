@@ -8,20 +8,12 @@ var directions = [
 [ 1, 1]
 ]
 
-$(function() {
+function regenerar(grid_size,branchWidth,nLines,turning_chances,splitting_chances){
 
-	var nLines = 7;
-	var branchWidth = 3;
-	var branchDistance = 4;
 	var w = 640;
 	var h = 480;
 
-	var grid_size = 12;
-
 	var trunk_len = 8;
-
-	var turning_chances = 0.2;
-	var splitting_chances = 0.6;
 
 	var canvas = document.getElementById("canvas");
 	if (canvas.getContext) {
@@ -177,5 +169,7 @@ $(function() {
 			n++;
 		}
 	}
-});
+}
+
+
 

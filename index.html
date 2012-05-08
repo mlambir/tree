@@ -1,12 +1,101 @@
 <html>
- <head>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<head>
+  <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.20.custom.css" rel="Stylesheet" />  
+  <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="js/jquery-ui-1.8.20.custom.min.js"></script>
   <script src="js/fiqus.js" type="text/javascript" charset="utf-8" async defer></script>
-  <script type="application/javascript">
+  <style type="text/css" media="screen">
+  canvas{
+    float: left;
+  } 
+  #controls{
+    float:left;
+    width:300px;
+    padding:20px;
+  }
+  #regenerar{
+    margin:10px;
+    margin-left:200px;
+  }
+  .control{
+    padding:20px;
+  }
+  </style>
+</head>
+<body>
+ <canvas id="canvas" width="640" height="480" style="border:1px solid black;"></canvas>
+ <div id="controls">
+  <div class="control">
+    <label for="slider_grid_size">Tamaño de grilla: <span></span></label>
+    <div class="slider" id="slider_grid_size"></div>
+  </div>
+  <div class="control">
+    <label for="slider_branch_size">Ancho de lineas</label>
+    <div class="slider" id="slider_branch_size"></div>
+  </div>
+  <div class="control">
+    <label for="slider_number_members">Cantidad de ramas iniciales</label>
+    <div class="slider" id="slider_number_members"></div>
+  </div>
+  <div class="control">
+    <label for="slider_turn_chance">Probabilidades de cambio de direccion</label>
+    <div class="slider" id="slider_turn_chance"></div>
+  </div>
+  <div class="control">
+    <label for="slider_branch_chance">Probabilidades de generar nuevas ramas</label>
+    <div class="slider" id="slider_branch_chance"></div>
+  </div>
+  <div class="control">
+    <button id="regenerar">Regenerar</button>
+  </div>
+</div><!-- /controls -->
+</body>
 
-  </script>
- </head>
- <body>
-   <canvas id="canvas" width="640" height="480" style="border:1px solid black;"></canvas>
- </body>
+<script>
+$(function() {
+  var slider_change = function(e, ui){
+    console.debug(e, ui);
+  };
+
+  $( "#slider_grid_size" ).slider({
+    min:5,
+    max:50,
+    value:12,
+    change: slider_change
+  });
+  $( "#slider_branch_size" ).slider({
+    min:1,
+    max:10,
+    value:3,
+    change: slider_change
+  });
+  $( "#slider_number_members" ).slider({
+    min:1,
+    max:30,
+    value:7,
+    change: slider_change
+  });
+  $( "#slider_turn_chance" ).slider({
+    min:1,
+    max:1000,
+    value:200,
+    change: slider_change
+  });
+  $( "#slider_branch_chance" ).slider({
+    min:1,
+    max:1000,
+    value:600,
+    change: slider_change
+  });
+
+  $('.slider').slider('change');
+  $("#regenerar").click(function() {
+      regenerar($( "#slider_grid_size" ).slider('value'),
+                $( "#slider_branch_size" ).slider('value'),
+                $( "#slider_number_members" ).slider('value'),
+                $( "#slider_turn_chance" ).slider('value')/1000,
+                $( "#slider_branch_chance" ).slider('value')/1000);
+  });
+});
+</script>
 </html>
