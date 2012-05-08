@@ -1,3 +1,5 @@
+"use strict";
+
 var directions = [
 [-1, 1],
 [-1, 0],
@@ -19,33 +21,33 @@ function regenerar(grid_size,branchWidth,nLines,turning_chances,splitting_chance
 	if (canvas.getContext) {
 		var ctx = canvas.getContext("2d");
 		
-		grid_total_width = Math.floor(w / grid_size) * grid_size;
-		grid_total_height = Math.floor(h / grid_size) * grid_size;
+		var grid_total_width = Math.floor(w / grid_size) * grid_size;
+		var grid_total_height = Math.floor(h / grid_size) * grid_size;
 
-		base_x = w/2 - grid_total_width/2;
-		base_y = h/2 - grid_total_height/2;
+		var base_x = w/2 - grid_total_width/2;
+		var base_y = h/2 - grid_total_height/2;
 
-		rows = grid_total_height/grid_size;
-		cols = grid_total_width/grid_size;
+		var rows = grid_total_height/grid_size;
+		var cols = grid_total_width/grid_size;
 
-		radius = Math.abs(Math.min(cols+1, rows+1)/2.2);
-		center = [(cols + 1 )/ 2, (rows + 1)/2];
+		var radius = Math.abs(Math.min(cols+1, rows+1)/2.2);
+		var center = [(cols + 1 )/ 2, (rows + 1)/2];
 
-		back_color = '#FFFFFF';
-		fore_color = '#000000';
+		var back_color = '#FFFFFF';
+		var fore_color = '#000000';
 
 		//inicializo la matriz;
-		matrix = [];
-		for(i=0;i<cols+1;i++){
+		var matrix = [];
+		for(var i=0;i<cols+1;i++){
 			matrix[i] = [];
 		}
 
-		drawn_squares = [];
+		var drawn_squares = [];
 		for(i=0;i<cols;i++){
 			drawn_squares[i] = [];
 		}
 
-		puntos = [];
+		var puntos = [];
 		for(i=0;i<nLines;i++){
 			var p = [cols - Math.floor((cols+1)/2) - Math.floor(nLines/2) + i , rows-2 ];
 			puntos.push(p);
