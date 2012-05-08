@@ -3,7 +3,7 @@
   <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.20.custom.css" rel="Stylesheet" />  
   <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
   <script type="text/javascript" src="js/jquery-ui-1.8.20.custom.min.js"></script>
-  <script src="js/fiqus.js" type="text/javascript" charset="utf-8" async defer></script>
+  <script src="js/fiqus.js" type="text/javascript" charset="utf-8"></script>
   <style type="text/css" media="screen">
   canvas{
     float: left;
@@ -90,12 +90,17 @@ $(function() {
 
   $('.slider').slider('change');
   $("#regenerar").click(function() {
-      regenerar($( "#slider_grid_size" ).slider('value'),
-                $( "#slider_branch_size" ).slider('value'),
-                $( "#slider_number_members" ).slider('value'),
-                $( "#slider_turn_chance" ).slider('value')/1000,
-                $( "#slider_branch_chance" ).slider('value')/1000);
+    regen_con_params();
   });
+
+  function regen_con_params(){
+    regenerar($( "#slider_grid_size" ).slider('value'),
+              $( "#slider_branch_size" ).slider('value'),
+              $( "#slider_number_members" ).slider('value'),
+              $( "#slider_turn_chance" ).slider('value')/1000,
+              $( "#slider_branch_chance" ).slider('value')/1000);
+  }
+  regen_con_params();
 });
 </script>
 </html>
