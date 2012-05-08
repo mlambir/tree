@@ -11,17 +11,17 @@ var directions = [
 $(function() {
 
 	var nLines = 7;
-	var branchWidth = 4;
+	var branchWidth = 3;
 	var branchDistance = 4;
 	var w = 640;
 	var h = 480;
 
-	var grid_size = 15;
+	var grid_size = 12;
 
-	var trunk_len = 10;
+	var trunk_len = 8;
 
 	var turning_chances = 0.2;
-	var splitting_chances = 0.5;
+	var splitting_chances = 0.6;
 
 	var canvas = document.getElementById("canvas");
 	if (canvas.getContext) {
@@ -39,30 +39,18 @@ $(function() {
 		radius = Math.abs(Math.min(cols+1, rows+1)/2.2);
 		center = [(cols + 1 )/ 2, (rows + 1)/2];
 
-		/*ctx.lineWidth = 1;
-
-		for(var i = 0; i <= grid_total_width/grid_size; i++){
-			ctx.beginPath();
-			ctx.moveTo(base_x + i*grid_size,base_y);
-			ctx.lineTo(base_x + i*grid_size,base_y + grid_total_height);
-			ctx.stroke();
-		}
-
-		for(i = 0; i <= grid_total_height/grid_size; i++){
-			ctx.beginPath();
-			ctx.moveTo(base_x, base_y + i*grid_size);
-			ctx.lineTo(base_x + grid_total_width, base_y + i*grid_size);
-			ctx.stroke();
-		}
-		*/
-		ctx.lineWidth = branchWidth;
+		back_color = '#FFFFFF';
+		fore_color = '#000000';
 
 		//inicializo la matriz;
 		matrix = [];
 		for(i=0;i<cols+1;i++){
 			matrix[i] = [];
-			for(j=0;j<rows+1;j++){
-			}
+		}
+
+		drawn_squares = [];
+		for(i=0;i<cols;i++){
+			drawn_squares[i] = [];
 		}
 
 		puntos = [];
@@ -95,20 +83,8 @@ $(function() {
 			}
 			var dir = directions[n_direction];
 			if(Math.abs(dir[0])> 0 && Math.abs(dir[1])> 0){ //si es diagonal
-				op_1 = [point_from[0] + dir[0], point_from[1]];
-				op_2 = [point_from[0], point_from[1] + dir[1]];
-
-				if(matrix[op_1[0]] !== undefined && matrix[op_1[0]][op_1[1]] !== undefined){
-					var op1_dir = directions[matrix[op_1[0]][op_1[1]]];
-					if(op_1[0] + op1_dir[0] == op_2[0] && op_1[1] + op1_dir[1] == op_2[1]){
-						return false;
-					}
-				}
-				if(matrix[op_2[0]] !== undefined && matrix[op_2[0]][op_2[1]] !== undefined){
-					var op2_dir = directions[matrix[op_2[0]][op_2[1]]];
-					if(op_2[0] + directions[matrix[op_2[0]][op_2[1]]][0] == op_1[0] && op_2[1] + directions[matrix[op_2[0]][op_2[1]]][1] == op_1[1]){
-						return false;
-					}
+				if(drawn_squares[Math.min(point_from[0], next_point[0])][Math.min(point_from[1], next_point[1])]){
+					return false;
 				}
 			}
 
@@ -130,7 +106,6 @@ $(function() {
 					possible_directions = [n_direction, n_direction+1, n_direction-1];
 				}
 			}
-			console.debug(possible_directions);
 			for (var i = 0; i < possible_directions.length; i++) {
 				if(can_draw(point_from, possible_directions[i])){
 					return possible_directions[i];
@@ -141,6 +116,12 @@ $(function() {
 
 		var drawing = true;
 		var n = 0;
+
+		ctx.fillStyle = back_color;
+		ctx.strokeStyle = fore_color;
+
+		ctx.fillRect(0,0,w,h);
+
 		while (drawing){ //los primeros sigo para arriba el tronco
 			drawing = false;
 			var l = puntos.length;
@@ -150,7 +131,6 @@ $(function() {
 					continue;
 				}
 				var direccion = matrix[punto_prev[0]][punto_prev[1]];
-
 				if(n == trunk_len){ //termine el tronco, hago que se abran las ramas
 					if(i < puntos.length/3 - 1){
 						direccion = 2;
@@ -159,11 +139,10 @@ $(function() {
 					}
 				}else if(n > trunk_len){//las ramas
 					direccion = get_checked_direction(punto_prev, direccion);
-					if(!direccion){
+					if(direccion === undefined){
 						puntos[i] = false;
 						ctx.beginPath();
 						ctx.arc(base_x + grid_size * punto_prev[0],base_y + grid_size * punto_prev[1] , branchWidth, 0, 2*Math.PI);
-						ctx.fillStyle = "white";
 						ctx.fill();
 						ctx.stroke();
 						continue;
@@ -181,7 +160,18 @@ $(function() {
 				ctx.beginPath();
 				ctx.moveTo(base_x + grid_size * punto_prev[0],base_y + grid_size * punto_prev[1]);
 				ctx.lineTo(base_x + grid_size * punto_next[0],base_y + grid_size * punto_next[1]);
+				ctx.strokeStyle = fore_color;
+				if(n < trunk_len/3){
+					ctx.lineWidth = branchWidth * 2;
+				}else{
+					ctx.lineWidth = branchWidth;
+				}
 				ctx.stroke();
+				
+				if(Math.abs(dir[0])> 0 && Math.abs(dir[1])> 0){ //si es diagonal
+					drawn_squares[Math.min(punto_prev[0], punto_next[0])][Math.min(punto_prev[1], punto_next[1])] = true;
+				}
+
 				drawing = true;
 			}
 			n++;
