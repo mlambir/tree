@@ -18,7 +18,7 @@
     margin-left:200px;
   }
   .control{
-    padding:20px;
+    padding-top:10px;
   }
   </style>
 </head>
@@ -38,6 +38,14 @@
     <div class="slider" id="slider_number_members"></div>
   </div>
   <div class="control">
+    <label for="slider_trunk_size">Tamaño del tronco</label>
+    <div class="slider" id="slider_trunk_size"></div>
+  </div>
+  <div class="control">
+    <label for="slider_cup_radius">Tamaño de copa</label>
+    <div class="slider" id="slider_cup_radius"></div>
+  </div>
+  <div class="control">
     <label for="slider_turn_chance">Probabilidades de cambio de direccion</label>
     <div class="slider" id="slider_turn_chance"></div>
   </div>
@@ -54,7 +62,7 @@
 <script>
 $(function() {
   var slider_change = function(e, ui){
-    console.debug(e, ui);
+    regen_con_params();
   };
 
   $( "#slider_grid_size" ).slider({
@@ -75,6 +83,18 @@ $(function() {
     value:7,
     change: slider_change
   });
+  $( "#slider_trunk_size" ).slider({
+    min:1,
+    max:20,
+    value:8,
+    change: slider_change
+  });
+  $( "#slider_cup_radius" ).slider({
+    min:1,
+    max:1000,
+    value:950,
+    change: slider_change
+  });
   $( "#slider_turn_chance" ).slider({
     min:1,
     max:1000,
@@ -88,17 +108,22 @@ $(function() {
     change: slider_change
   });
 
-  $('.slider').slider('change');
   $("#regenerar").click(function() {
     regen_con_params();
   });
 
   function regen_con_params(){
-    regenerar($( "#slider_grid_size" ).slider('value'),
-              $( "#slider_branch_size" ).slider('value'),
-              $( "#slider_number_members" ).slider('value'),
-              $( "#slider_turn_chance" ).slider('value')/1000,
-              $( "#slider_branch_chance" ).slider('value')/1000);
+      t = new Tree(document.getElementById("canvas"),
+                    $( "#slider_grid_size" ).slider('value'),
+                    $( "#slider_branch_size" ).slider('value'),
+                    $( "#slider_number_members" ).slider('value'),
+                    $( "#slider_trunk_size" ).slider('value'),
+                    $( "#slider_cup_radius" ).slider('value')/1000,
+                    $( "#slider_turn_chance" ).slider('value')/1000,
+                    $( "#slider_branch_chance" ).slider('value')/1000);
+      t.generate();
+      t.draw();
+
   }
   regen_con_params();
 });
