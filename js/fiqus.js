@@ -1,4 +1,7 @@
 var directions = [[0, 1],[-1, 1], [-1, 0], [-1,-1], [ 0,-1], [ 1,-1], [ 1, 0], [ 1, 1], [0, 1]];
+function randOrd(){
+	return (Math.round(Math.random())-0.5);
+}
 
     // shim layer with setTimeout fallback
 window.requestAnimFrame = (function(){
@@ -174,6 +177,9 @@ Tree.prototype.generate = function() {
 			}
 		}
 		active_branches = next_active_branches;
+		if(n > this.trunk_len){
+			active_branches.sort(randOrd);
+		}
 		n++;
 	}
 };
@@ -224,6 +230,7 @@ Tree.prototype.draw = function(animate) {
 			}
 		}
 		current_branches = next_branches;
+		current_branches.sort(randOrd);
 		n++;
 		if(current_branches.length > 0){
 			if(animate){
