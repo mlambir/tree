@@ -54,6 +54,10 @@
     <div class="slider" id="slider_branch_chance"></div>
   </div>
   <div class="control">
+    <label for="slider_death_chance">Probabilidades de terminar una rama</label>
+    <div class="slider" id="slider_death_chance"></div>
+  </div>
+  <div class="control">
     <button id="regenerar">Regenerar</button>
   </div>
 </div><!-- /controls -->
@@ -107,6 +111,12 @@ $(function() {
     value:600,
     change: slider_change
   });
+  $( "#slider_death_chance" ).slider({
+    min:1,
+    max:1000,
+    value:100,
+    change: slider_change
+  });
 
   $("#regenerar").click(function() {
     regen_con_params();
@@ -120,7 +130,8 @@ $(function() {
                     $( "#slider_trunk_size" ).slider('value'),
                     $( "#slider_cup_radius" ).slider('value')/1000,
                     $( "#slider_turn_chance" ).slider('value')/1000,
-                    $( "#slider_branch_chance" ).slider('value')/1000);
+                    $( "#slider_branch_chance" ).slider('value')/1000,
+                    $( "#slider_death_chance" ).slider('value')/1000);
       t.generate();
       t.draw();
 
