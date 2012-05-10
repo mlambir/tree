@@ -1,5 +1,18 @@
 var directions = [[0, 1],[-1, 1], [-1, 0], [-1,-1], [ 0,-1], [ 1,-1], [ 1, 0], [ 1, 1], [0, 1]];
 
+    // shim layer with setTimeout fallback
+window.requestAnimFrame = (function(){
+	return  window.requestAnimationFrame       ||
+			window.webkitRequestAnimationFrame ||
+			window.mozRequestAnimationFrame    ||
+			window.oRequestAnimationFrame      ||
+			window.msRequestAnimationFrame     ||
+			function( callback ){
+				window.setTimeout(callback, 1000 / 60);
+			};
+})();
+ 
+
 var Branch = function(point, direction){
 	this.point = point;
 	this.direction = direction;
@@ -179,7 +192,10 @@ Tree.prototype.draw = function() {
 	this.ctx.fillRect(0,0,this.width,this.height);
 
 	var n = 0;
-	while(current_branches.length > 0){
+	//while(current_branches.length > 0){
+	that = this;
+	(function animLoop(){
+		requestAnimFrame(animLoop);
 		next_branches = [];
 		for (i = 0; i < current_branches.length; i++) {
 			branch = current_branches[i];
@@ -189,27 +205,28 @@ Tree.prototype.draw = function() {
 					
 					next_branches.push(child);
 					
-					this.ctx.beginPath();
-					this.ctx.moveTo(this.base_x + this.grid_size * branch.point[0],this.base_y + this.grid_size * branch.point[1]);
-					this.ctx.lineTo(this.base_x + this.grid_size * child.point[0],this.base_y + this.grid_size * child.point[1]);
-					this.ctx.strokeStyle = this.fore_color;
-					if(n < this.trunk_len/3){
-						this.ctx.lineWidth = this.branchWidth * 2;
+					that.ctx.beginPath();
+					that.ctx.moveTo(that.base_x + that.grid_size * branch.point[0],that.base_y + that.grid_size * branch.point[1]);
+					that.ctx.lineTo(that.base_x + that.grid_size * child.point[0],that.base_y + that.grid_size * child.point[1]);
+					that.ctx.strokeStyle = that.fore_color;
+					if(n < that.trunk_len/3){
+						that.ctx.lineWidth = that.branchWidth * 2;
 					}else{
-						this.ctx.lineWidth = this.branchWidth;
+						that.ctx.lineWidth = that.branchWidth;
 					}
-					this.ctx.stroke();
+					that.ctx.stroke();
 				}
 			}else{
-				this.ctx.beginPath();
-				this.ctx.arc(this.base_x + this.grid_size * branch.point[0],
-								this.base_y + this.grid_size * branch.point[1],
-								this.branchWidth, 0, 2*Math.PI);
-				this.ctx.fill();
-				this.ctx.stroke();
+				that.ctx.beginPath();
+				that.ctx.arc(that.base_x + that.grid_size * branch.point[0],
+								that.base_y + that.grid_size * branch.point[1],
+								that.branchWidth, 0, 2*Math.PI);
+				that.ctx.fill();
+				that.ctx.stroke();
 			}
 		}
 		current_branches = next_branches;
 		n++;
-	}
+	})();
+	//}
 };
