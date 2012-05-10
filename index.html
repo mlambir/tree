@@ -13,12 +13,11 @@
     width:300px;
     padding:20px;
   }
-  #regenerar{
-    margin:10px;
-    margin-left:200px;
-  }
   .control{
     padding-top:10px;
+  }
+  .control button{
+    float:right;
   }
   </style>
 </head>
@@ -58,6 +57,7 @@
     <div class="slider" id="slider_death_chance"></div>
   </div>
   <div class="control">
+    <button id="animar">Animar</button>
     <button id="regenerar">Regenerar</button>
   </div>
 </div><!-- /controls -->
@@ -121,8 +121,12 @@ $(function() {
   $("#regenerar").click(function() {
     regen_con_params();
   });
+  $("#animar").click(function() {
+    regen_con_params(true);
+  });
 
-  function regen_con_params(){
+
+  function regen_con_params(animar){
       t = new Tree(document.getElementById("canvas"),
                     $( "#slider_grid_size" ).slider('value'),
                     $( "#slider_branch_size" ).slider('value'),
@@ -133,7 +137,7 @@ $(function() {
                     $( "#slider_branch_chance" ).slider('value')/1000,
                     $( "#slider_death_chance" ).slider('value')/1000);
       t.generate();
-      t.draw();
+      t.draw(animar);
 
   }
   regen_con_params();

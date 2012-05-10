@@ -176,10 +176,9 @@ Tree.prototype.generate = function() {
 		active_branches = next_active_branches;
 		n++;
 	}
-	console.debug(this.generated_tree);
 };
 
-Tree.prototype.draw = function() {
+Tree.prototype.draw = function(animate) {
 	
 	var current_branches = [];
 	for (var i = 0; i < this.generated_tree.length; i++) {
@@ -195,7 +194,6 @@ Tree.prototype.draw = function() {
 	//while(current_branches.length > 0){
 	that = this;
 	(function animLoop(){
-		requestAnimFrame(animLoop);
 		next_branches = [];
 		for (i = 0; i < current_branches.length; i++) {
 			branch = current_branches[i];
@@ -227,6 +225,13 @@ Tree.prototype.draw = function() {
 		}
 		current_branches = next_branches;
 		n++;
+		if(current_branches.length > 0){
+			if(animate){
+				requestAnimFrame(animLoop);
+			}else{
+				animLoop();
+			}
+		}
 	})();
 	//}
 };
