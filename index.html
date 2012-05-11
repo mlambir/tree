@@ -100,21 +100,21 @@ $(function() {
     change: slider_change
   });
   $( "#slider_turn_chance" ).slider({
-    min:1,
+    min:0,
     max:1000,
     value:200,
     change: slider_change
   });
   $( "#slider_branch_chance" ).slider({
-    min:1,
+    min:0,
     max:1000,
     value:600,
     change: slider_change
   });
   $( "#slider_death_chance" ).slider({
-    min:1,
+    min:0,
     max:1000,
-    value:100,
+    value:0,
     change: slider_change
   });
 
@@ -137,7 +137,11 @@ $(function() {
                     $( "#slider_branch_chance" ).slider('value')/1000,
                     $( "#slider_death_chance" ).slider('value')/1000);
       t.generate();
-      t.draw(animar);
+      if(animar){
+        t.animate(); 
+      }else{
+        t.draw(); 
+      }
 
   }
   regen_con_params();

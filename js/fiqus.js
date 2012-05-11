@@ -184,7 +184,57 @@ Tree.prototype.generate = function() {
 	}
 };
 
-Tree.prototype.draw = function(animate) {
+Tree.prototype.draw = function() {
+	
+	var current_branches = [];
+	for (var i = 0; i < this.generated_tree.length; i++) {
+		current_branches.push(this.generated_tree[i]);
+	}
+
+	this.ctx.fillStyle = this.back_color;
+	this.ctx.lineStyle = this.fore_color;
+
+	this.ctx.fillRect(0,0,this.width,this.height);
+
+	var n = 0;
+	while(current_branches.length > 0){
+		next_branches = [];
+		for (i = 0; i < current_branches.length; i++) {
+			branch = current_branches[i];
+			if(branch.children.length>0){
+				for (var j = 0; j < branch.children.length; j++) {
+					child = branch.children[j];
+					
+					next_branches.push(child);
+					
+					this.ctx.beginPath();
+					this.ctx.moveTo(this.base_x + this.grid_size * branch.point[0],this.base_y + this.grid_size * branch.point[1]);
+					this.ctx.lineTo(this.base_x + this.grid_size * child.point[0],this.base_y + this.grid_size * child.point[1]);
+					this.ctx.strokeStyle = this.fore_color;
+					if(n < this.trunk_len/3){
+						this.ctx.lineWidth = this.branchWidth * 2;
+					}else{
+						this.ctx.lineWidth = this.branchWidth;
+					}
+					this.ctx.stroke();
+				}
+			}else{
+				this.ctx.beginPath();
+				this.ctx.arc(this.base_x + this.grid_size * branch.point[0],
+								this.base_y + this.grid_size * branch.point[1],
+								this.branchWidth, 0, 2*Math.PI);
+				this.ctx.fill();
+				this.ctx.stroke();
+			}
+		}
+		current_branches = next_branches;
+		current_branches.sort(randOrd);
+		n++;
+	}
+};
+
+
+Tree.prototype.animate = function() {
 	
 	var current_branches = [];
 	for (var i = 0; i < this.generated_tree.length; i++) {
@@ -199,6 +249,7 @@ Tree.prototype.draw = function(animate) {
 	var n = 0;
 	//while(current_branches.length > 0){
 	that = this;
+	var pending_branches = [];
 	(function animLoop(){
 		next_branches = [];
 		for (i = 0; i < current_branches.length; i++) {
@@ -206,19 +257,22 @@ Tree.prototype.draw = function(animate) {
 			if(branch.children.length>0){
 				for (var j = 0; j < branch.children.length; j++) {
 					child = branch.children[j];
-					
-					next_branches.push(child);
-					
-					that.ctx.beginPath();
-					that.ctx.moveTo(that.base_x + that.grid_size * branch.point[0],that.base_y + that.grid_size * branch.point[1]);
-					that.ctx.lineTo(that.base_x + that.grid_size * child.point[0],that.base_y + that.grid_size * child.point[1]);
-					that.ctx.strokeStyle = that.fore_color;
-					if(n < that.trunk_len/3){
-						that.ctx.lineWidth = that.branchWidth * 2;
+					if(n < that.trunk_len || Math.random() < 0.7){
+						next_branches.push(child);
 					}else{
-						that.ctx.lineWidth = that.branchWidth;
+						pending_branches.push(child);
 					}
-					that.ctx.stroke();
+						that.ctx.beginPath();
+						that.ctx.moveTo(that.base_x + that.grid_size * branch.point[0],that.base_y + that.grid_size * branch.point[1]);
+						that.ctx.lineTo(that.base_x + that.grid_size * child.point[0],that.base_y + that.grid_size * child.point[1]);
+						that.ctx.strokeStyle = that.fore_color;
+						if(n < that.trunk_len/3){
+							that.ctx.lineWidth = that.branchWidth * 2;
+						}else{
+							that.ctx.lineWidth = that.branchWidth;
+						}
+						that.ctx.stroke();
+
 				}
 			}else{
 				that.ctx.beginPath();
@@ -229,15 +283,18 @@ Tree.prototype.draw = function(animate) {
 				that.ctx.stroke();
 			}
 		}
+
+		cant_ramas_animadas = 7;
+		if(next_branches.length < cant_ramas_animadas){
+			for(var cant = 0; cant < Math.min(pending_branches.length, cant_ramas_animadas);cant++){
+				next_branches.push(pending_branches.sort(randOrd).pop());
+			}
+		}
 		current_branches = next_branches;
 		current_branches.sort(randOrd);
 		n++;
 		if(current_branches.length > 0){
-			if(animate){
-				requestAnimFrame(animLoop);
-			}else{
-				animLoop();
-			}
+			requestAnimFrame(animLoop);
 		}
 	})();
 	//}
