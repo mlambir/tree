@@ -45,6 +45,10 @@
     <div class="slider" id="slider_cup_radius"></div>
   </div>
   <div class="control">
+    <label for="slider_cup_position">Posición de copa</label>
+    <div class="slider" id="slider_cup_position"></div>
+  </div>
+  <div class="control">
     <label for="slider_turn_chance">Probabilidades de cambio de direccion</label>
     <div class="slider" id="slider_turn_chance"></div>
   </div>
@@ -99,6 +103,12 @@ $(function() {
     value:950,
     change: slider_change
   });
+  $( "#slider_cup_position" ).slider({
+    min:-500,
+    max:500,
+    value:0,
+    change: slider_change
+  });
   $( "#slider_turn_chance" ).slider({
     min:0,
     max:1000,
@@ -133,6 +143,7 @@ $(function() {
                     $( "#slider_number_members" ).slider('value'),
                     $( "#slider_trunk_size" ).slider('value'),
                     $( "#slider_cup_radius" ).slider('value')/1000,
+                    $( "#slider_cup_position" ).slider('value')/1000,
                     $( "#slider_turn_chance" ).slider('value')/1000,
                     $( "#slider_branch_chance" ).slider('value')/1000,
                     $( "#slider_death_chance" ).slider('value')/1000);

@@ -22,7 +22,7 @@ var Branch = function(point, direction){
 	this.children = [];
 };
 
-var Tree = function(canvas, grid_size, branchWidth, nLines, trunk_len, rad, turning_chances, splitting_chances, death_chances){
+var Tree = function(canvas, grid_size, branchWidth, nLines, trunk_len, rad, pos_leaves, turning_chances, splitting_chances, death_chances){
 	this.set_canvas(canvas);
 	this.grid_size = grid_size;
 	this.branchWidth = branchWidth;
@@ -31,6 +31,7 @@ var Tree = function(canvas, grid_size, branchWidth, nLines, trunk_len, rad, turn
 	this.turning_chances = turning_chances;
 	this.splitting_chances = splitting_chances;
 	this.death_chances = death_chances;
+	this.pos_leaves = pos_leaves;
 
 	this.grid_total_width = Math.floor(this.width / this.grid_size) * this.grid_size;
 	this.grid_total_height = Math.floor(this.height / this.grid_size) * this.grid_size;
@@ -42,7 +43,7 @@ var Tree = function(canvas, grid_size, branchWidth, nLines, trunk_len, rad, turn
 	this.cols = this.grid_total_width/this.grid_size;
 
 	this.radius = Math.abs((Math.min(this.cols+1, this.rows+1)/2) * rad);
-	this.center = [(this.cols + 1 )/ 2, (this.rows + 1)/2];
+	this.center = [(this.cols + 1 )/ 2, Math.abs(this.rows/2 + this.rows*this.pos_leaves/2)];
 
 	this.back_color = '#FFFFFF';
 	this.fore_color = '#000000';
