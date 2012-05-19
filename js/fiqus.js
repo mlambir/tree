@@ -45,8 +45,8 @@ var Tree = function(canvas, grid_size, branchWidth, nLines, trunk_len, rad, pos_
 	this.radius = Math.abs((Math.min(this.cols+1, this.rows+1)/2) * rad);
 	this.center = [(this.cols + 1 )/ 2, Math.abs(this.rows/2 + this.rows*this.pos_leaves/2)];
 
-	this.back_color = '#FFFFFF';
-	this.fore_color = '#000000';
+	this.back_color = 'rgba(0,0,0,0)';
+	this.fore_color = '#062202';
 };
 
 Tree.prototype.set_canvas = function(c) {
@@ -113,14 +113,23 @@ Tree.prototype.get_checked_direction = function(point_from, n_direction){
 };
 
 Tree.prototype.new_branch = function(parent, direction){
-	dir = directions[direction];
-	branch = new Branch([parent.point[0] + dir[0], parent.point[1] + dir[1]], direction);
+	var dir = directions[direction];
+	var branch = new Branch([parent.point[0] + dir[0], parent.point[1] + dir[1]], direction);
 	this.matrix[branch.point[0]][branch.point[1]] = true;
 	if(Math.abs(dir[0])> 0 && Math.abs(dir[1])> 0){ /*si es diagonal*/
 		this.used_squares[Math.min(parent.point[0], branch.point[0])][Math.min(parent.point[1], branch.point[1])] = true;
 	}
 	parent.children.push(branch);
 	return branch;
+};
+
+
+Tree.prototype.clear = function(){
+    this.ctx.fillStyle =this.back_color;
+    this.ctx.clearRect(0,0,this.width,this.height);
+};
+Tree.prototype.stop_animation = function(){
+    this.animating = false;
 };
 
 Tree.prototype.generate = function() {
@@ -195,7 +204,8 @@ Tree.prototype.draw = function() {
 	this.ctx.fillStyle = this.back_color;
 	this.ctx.lineStyle = this.fore_color;
 
-	this.ctx.fillRect(0,0,this.width,this.height);
+	//this.ctx.fillRect(0,0,this.width,this.height);
+	//this.ctx.clearRect(0,0,this.width,this.height);
 
 	var n = 0;
 	while(current_branches.length > 0){
@@ -236,7 +246,7 @@ Tree.prototype.draw = function() {
 
 
 Tree.prototype.animate = function() {
-	
+	this.animating = true;
 	var current_branches = [];
 	for (var i = 0; i < this.generated_tree.length; i++) {
 		current_branches.push(this.generated_tree[i]);
@@ -245,19 +255,22 @@ Tree.prototype.animate = function() {
 	this.ctx.fillStyle = this.back_color;
 	this.ctx.lineStyle = this.fore_color;
 
-	this.ctx.fillRect(0,0,this.width,this.height);
+	//this.ctx.clearRect(0,0,this.width,this.height);
 
 	var n = 0;
 	//while(current_branches.length > 0){
-	that = this;
+	var that = this;
 	var pending_branches = [];
 	(function animLoop(){
-		next_branches = [];
+		if(!that.animating){
+			return;
+		}
+		var next_branches = [];
 		for (i = 0; i < current_branches.length; i++) {
-			branch = current_branches[i];
+			var branch = current_branches[i];
 			if(branch.children.length>0){
 				for (var j = 0; j < branch.children.length; j++) {
-					child = branch.children[j];
+					var child = branch.children[j];
 					if(n < that.trunk_len || Math.random() < 0.7){
 						next_branches.push(child);
 					}else{
@@ -285,7 +298,7 @@ Tree.prototype.animate = function() {
 			}
 		}
 
-		cant_ramas_animadas = 7;
+		var cant_ramas_animadas = 7;
 		if(next_branches.length < cant_ramas_animadas){
 			for(var cant = 0; cant < Math.min(pending_branches.length, cant_ramas_animadas);cant++){
 				next_branches.push(pending_branches.sort(randOrd).pop());

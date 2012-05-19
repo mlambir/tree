@@ -147,6 +147,9 @@ $(function() {
                     $( "#slider_turn_chance" ).slider('value')/1000,
                     $( "#slider_branch_chance" ).slider('value')/1000,
                     $( "#slider_death_chance" ).slider('value')/1000);
+      
+      t.stop_animation();
+      t.clear();
       t.generate();
       if(animar){
         t.animate(); 
